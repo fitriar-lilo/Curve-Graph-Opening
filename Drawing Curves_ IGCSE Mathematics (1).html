@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Drawing Curves: Quadratic, Cubic and Reciprocal Graphs</title>
+<style>
+:root{--bg:#3f6f9f;--top:#fff;--ink:#1c2733;--card:#fff;--acc:#1b5e9b;--ok:#1d7a46;--bad:#b3261e;--line:#b9c7d6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Cambria,serif;font-size:12pt;line-height:1.5}
+main{max-width:780px;margin:0 auto;padding:64px 16px 40px}
+h1,h2{font-size:16pt;line-height:1.5;margin:0 0 8px}
+h1{border-bottom:3px solid var(--top);padding-bottom:6px}
+main>h1,main>p{color:var(--top)}
+h2{border-left:6px solid var(--acc);padding-left:10px;margin-top:8px}
+h3{font-size:12pt;margin:14px 0 4px}
+section{background:var(--card);border-radius:8px;padding:18px 20px;margin:20px 0;border:1px solid var(--line)}
+p,li{margin:6px 0}
+.tip{background:#eef5ff;border-left:4px solid var(--acc);padding:6px 12px;margin:10px 0}
+.eq{font-weight:bold;color:var(--acc)}
+canvas{width:100%;height:auto;border:1px solid var(--line);border-radius:6px;background:#fff;display:block;margin:8px 0}
+button{font:inherit;background:var(--acc);color:#fff;border:0;border-radius:6px;padding:6px 14px;margin:4px 6px 4px 0;cursor:pointer}
+button.alt{background:#fff;color:var(--acc);border:2px solid var(--acc)}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #f2a900;outline-offset:2px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;margin:8px 0}
+th,td{border:1px solid var(--line);padding:4px 8px;text-align:center;min-width:52px}
+th{background:#eef5ff}
+td input{width:54px;font:inherit;text-align:center}
+input.ok{background:#d9f2e3;border-color:var(--ok)}input.bad{background:#fbe0de;border-color:var(--bad)}
+textarea,.form input{width:100%;font:inherit;padding:6px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink)}
+textarea{min-height:80px}
+.q{margin:10px 0}.q input{width:80px;font:inherit;padding:2px 6px;margin-left:6px}
+.fb{font-weight:bold}
+#picker{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);right:8px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:11pt;z-index:9;display:grid;gap:4px;line-height:1.4}
+#picker label{display:flex;justify-content:space-between;gap:8px;align-items:center}
+#picker select{font:inherit;font-size:11pt;background:#fff;color:var(--ink);max-width:150px}
+@media (max-width:520px){#picker .pt{display:none}main{padding-top:92px}}
+@media print{main>h1,main>p{color:#000}h1{border-color:#000}#picker,button,.noprint{display:none!important}body{background:#fff}section{break-inside:avoid;border:1px solid #999;background:#fff}textarea{border:1px solid #999}}
+</style></head><body>
+<div id="picker" role="group" aria-label="Background Color Settings"><b class="pt">Background Color Settings</b><label>Background <select id="bg"><option value="#3f6f9f">Ocean Blue</option><option value="#1f3a5f">Navy</option><option value="#2e5e45">Forest Green</option><option value="#1d5c63">Deep Teal</option><option value="#6b2737">Burgundy</option><option value="#4a3570">Royal Purple</option><option value="#333a43">Charcoal</option><option value="#5a6674">Slate Gray</option><option value="#5b4332">Chocolate Brown</option><option value="#7a8f3a">Olive Green</option><option value="#8a4a2f">Rust</option><option value="#0f1b2d">Midnight</option></select></label><label>Paper <select id="paper"><option value="#ffffff">White</option><option value="#fffdf5">Ivory</option><option value="#fdf6e3">Light Cream</option><option value="#f3f8fd">Pale Blue</option><option value="#f3faf3">Pale Green</option><option value="#fffbe0">Pale Yellow</option><option value="#fdf1f4">Pale Pink</option><option value="#f5f2fb">Pale Lavender</option><option value="#f4f5f6">Light Gray</option></select></label></div>
+
+<main>
+<h1>Drawing Curves: Quadratic, Cubic and Reciprocal Graphs</h1>
+<p>Welcome! You do not need to be a maths expert to draw curves. If you can substitute a number into an equation, you can draw any graph on this page. We go one small step at a time.</p>
+
+<section id="s1"><h2>1. How is a curve made?</h2>
+<p>A curve is a <b>collection of many points (x, y)</b> joined together. Each point comes from one value of x and the y-value the equation gives us. There are infinitely many points, so we plot a few and join them smoothly.</p>
+<p>Demo with the equation <span class="eq">y = x + 1</span>. For x = −3, y = −3 + 1 = −2, so the point is (−3, −2).</p>
+<button id="demoBtn">Plot Points One by One</button>
+<canvas id="c0" width="640" height="400" aria-label="Demo graph of y = x + 1"></canvas>
+</section>
+
+<section id="s2"><h2>2. Quadratic curves: y = ax² + bx + c</h2>
+<p>Here a, b, c are whole numbers and a is not 0. Our example is <span class="eq">y = x² − 4</span>. Fill in each y-value: square x first, then subtract 4. (Example: x = 3 gives 9 − 4 = 5.)</p>
+<div class="tip">Remember: a negative number squared is positive, so (−2)² = 4.</div>
+<div id="t2"></div><canvas id="c2" width="640" height="400" aria-label="Graph of y = x squared minus 4"></canvas>
+<h3>Key parts of a quadratic curve</h3>
+<ul>
+<li><b>Shape:</b> a parabola. If a is positive it is a U-shape; if a is negative it is an upside-down U.</li>
+<li><b>Turning point (vertex):</b> the lowest point (minimum) of a U or the highest point (maximum) of an upside-down U. Here it is (0, −4).</li>
+<li><b>Roots (x-intercepts):</b> where the curve meets the x-axis, so y = 0. Here x² − 4 = 0, so x = −2 and x = 2.</li>
+<li><b>y-intercept:</b> where the curve meets the y-axis, so x = 0. Here it is (0, −4).</li></ul>
+<h3>Your analysis</h3>
+<p>Where is the turning point? What are the roots? Write what you notice.</p>
+<textarea data-label="Quadratic analysis" placeholder="Type your analysis here..."></textarea>
+<h3>Practice</h3>
+<div class="q">1. For y = x² − 1, find y when x = 3. <input class="pa" data-a="8" data-label="Quad Q1 (y = x²-1, x = 3)" inputmode="numeric"></div>
+<div class="q">2. For y = x² − 9, what is the y-coordinate of the turning point? <input class="pa" data-a="-9" data-label="Quad Q2 (turning point y of y = x²-9)" inputmode="numeric"></div>
+<div class="q">3. For y = x² − 9, what is the smaller root (x when y = 0)? <input class="pa" data-a="-3" data-label="Quad Q3 (smaller root of y = x²-9)" inputmode="numeric"></div>
+<button class="chk">Check My Answers</button><span class="fb"></span>
+</section>
+
+<section id="s3"><h2>3. Cubic curves: y = ax³ + bx² + cx + d</h2>
+<p>Cubic curves have an x³ term. Our example is <span class="eq">y = x³ − 4x</span>. Cube x first (x × x × x), then subtract 4 times x. (Example: x = 2 gives 8 − 8 = 0.)</p>
+<div class="tip">A negative number cubed stays negative: (−2)³ = −8.</div>
+<div id="t3"></div><canvas id="c3" width="640" height="400" aria-label="Graph of y = x cubed minus 4x"></canvas>
+<h3>Key parts of a cubic curve</h3>
+<ul>
+<li><b>Shape and flow:</b> a stretched "S" shape. When a is positive, it rises on the right and falls on the left.</li>
+<li><b>Turning points:</b> up to two. One is a local maximum (a peak on the left, near x = −1) and one is a local minimum (a dip on the right, near x = 1).</li>
+<li><b>Roots:</b> up to three places where it crosses the x-axis. Here: x = −2, 0 and 2.</li></ul>
+<h3>Your analysis</h3>
+<p>What happens to y as x gets very large (like 100)? And very small (like −100)?</p>
+<textarea data-label="Cubic analysis" placeholder="Type your observations here..."></textarea>
+<h3>Practice</h3>
+<div class="q">1. For y = x³ − x, find y when x = 2. <input class="pa" data-a="6" data-label="Cubic Q1 (y = x³-x, x = 2)" inputmode="numeric"></div>
+<div class="q">2. For y = x³ − x, find y when x = −2. <input class="pa" data-a="-6" data-label="Cubic Q2 (y = x³-x, x = -2)" inputmode="numeric"></div>
+<div class="q">3. For y = x³ − x, find y when x = 1. (This is also a root!) <input class="pa" data-a="0" data-label="Cubic Q3 (y = x³-x, x = 1)" inputmode="numeric"></div>
+<button class="chk">Check My Answers</button><span class="fb"></span>
+</section>
+
+<section id="s4"><h2>4. Hyperbolic curves: y = a/x</h2>
+<p>Here x is in the bottom of a fraction. Our example is <span class="eq">y = 6/x</span>. Divide 6 by each x-value. (Example: x = −3 gives 6 ÷ (−3) = −2.) We cannot use x = 0 because you can never divide by 0.</p>
+<div id="t4"></div><canvas id="c4" width="640" height="400" aria-label="Graph of y = 6 over x"></canvas>
+<h3>Key parts of a hyperbola</h3>
+<ul>
+<li><b>Two branches:</b> positive x-values give positive y-values (top right). Negative x-values give negative y-values (bottom left). No x-value connects them, so the graph splits into two separate curves.</li>
+<li><b>Asymptote:</b> a line the curve gets extremely close to but <b>never touches or crosses</b>. The y-axis (x = 0) is an asymptote because we cannot divide by zero. The x-axis (y = 0) is too, because 6 ÷ x is never exactly 0.</li></ul>
+<h3>Your analysis</h3>
+<p>What happens to y as x gets closer and closer to 0? (Try x = 6, 3, 2, 1.)</p>
+<textarea data-label="Hyperbola analysis" placeholder="Type your explanation here..."></textarea>
+<h3>Practice</h3>
+<div class="q">1. For y = 12/x, find y when x = 3. <input class="pa" data-a="4" data-label="Hyperbola Q1 (y = 12/x, x = 3)" inputmode="numeric"></div>
+<div class="q">2. For y = 12/x, find y when x = −4. <input class="pa" data-a="-3" data-label="Hyperbola Q2 (y = 12/x, x = -4)" inputmode="numeric"></div>
+<div class="q">3. For y = 4/x, find x when y = 2. <input class="pa" data-a="2" data-label="Hyperbola Q3 (y = 4/x, y = 2)" inputmode="numeric"></div>
+<button class="chk">Check My Answers</button><span class="fb"></span>
+</section>
+
+<section id="sub" class="form"><h2>Submit your work</h2>
+<p><label>Student Name<input id="nm" autocomplete="name"></label></p>
+<p><label>Class<input id="cl"></label></p>
+<p><label>Student Notes<textarea id="nt"></textarea></label></p>
+<button id="send">Submit Work to Teacher</button>
+<button id="pdf" class="alt">Download My Work as PDF</button>
+<p class="noprint"><small>Submit opens your email app with your answers ready to send to the teacher. For the PDF, choose "Save as PDF" in the print window.</small></p>
+</section>
+</main>
+
+<script>
+const $=s=>document.querySelector(s);
+[['bg','--bg'],['paper','--card']].forEach(([id,v])=>{const e=$('#'+id);
+ try{const k=localStorage.getItem(id);if([...e.options].some(x=>x.value==k))e.value=k}catch(x){}
+ const set=()=>{const r=document.documentElement.style;r.setProperty(v,e.value);
+  if(id=='bg'){const h=e.value,L=[1,3,5].map(i=>parseInt(h.substr(i,2),16)).reduce((t,c,i)=>t+c*[.2126,.7152,.0722][i],0);r.setProperty('--top',L>150?'#1c2733':'#ffffff')}
+  try{localStorage.setItem(id,e.value)}catch(x){}};
+ e.onchange=set;set()});
+
+function grid(c,o){const x=c.getContext('2d'),W=c.width,H=c.height;
+ const X=v=>(v-o.xr[0])/(o.xr[1]-o.xr[0])*W,Y=v=>H-(v-o.yr[0])/(o.yr[1]-o.yr[0])*H;
+ x.clearRect(0,0,W,H);x.font='13px Cambria,serif';x.fillStyle='#333';x.lineWidth=1;
+ for(let i=Math.ceil(o.xr[0]);i<=o.xr[1];i++){x.strokeStyle=i?'#e1e6ec':'#222';x.lineWidth=i?1:2;x.beginPath();x.moveTo(X(i),0);x.lineTo(X(i),H);x.stroke();if(i)x.fillText(i,X(i)+2,Y(0)+14)}
+ for(let j=Math.ceil(o.yr[0]/o.ys)*o.ys;j<=o.yr[1];j+=o.ys){x.strokeStyle=j?'#e1e6ec':'#222';x.lineWidth=j?1:2;x.beginPath();x.moveTo(0,Y(j));x.lineTo(W,Y(j));x.stroke();if(j)x.fillText(j,X(0)+4,Y(j)-3)}
+ x.fillText('x',W-12,Y(0)-6);x.fillText('y',X(0)+8,12);return{x,X,Y}}
+function dots(c,o,P,n){const g=grid(c,o);if(o.joined)line(g,o);g.x.fillStyle='#c0392b';
+ P.slice(0,n).forEach(p=>{g.x.beginPath();g.x.arc(g.X(p[0]),g.Y(p[1]),5,0,7);g.x.fill()});return g}
+function line(g,o){g.x.strokeStyle='#1b5e9b';g.x.lineWidth=2.5;
+ o.segs.forEach(s=>{g.x.beginPath();let on=false;for(let v=s[0];v<=s[1]+1e-9;v+=0.02){const y=o.f(v);if(Math.abs(y)>o.yr[1]||y<o.yr[0]){on=false;continue}
+ on?g.x.lineTo(g.X(v),g.Y(y)):g.x.moveTo(g.X(v),g.Y(y));on=true}g.x.stroke()})}
+
+/* Section 1 demo */
+const d={xr:[-5,5],yr:[-5,5],ys:1,f:x=>x+1,segs:[[-4,4]]},dp=[-3,-2,-1,0,1,2,3].map(x=>[x,x+1]);let dt;
+grid($('#c0'),d);
+$('#demoBtn').onclick=()=>{clearInterval(dt);let n=0;d.joined=false;dots($('#c0'),d,dp,0);
+ dt=setInterval(()=>{n++;dots($('#c0'),d,dp,n);if(n>=dp.length){clearInterval(dt);setTimeout(()=>{d.joined=true;dots($('#c0'),d,dp,n)},700)}},600)};
+
+/* Sections 2-4: table + graph */
+const cfg=[
+ {id:2,xs:[-3,-2,-1,0,1,2,3],f:x=>x*x-4,xr:[-4,4],yr:[-6,8],ys:2,segs:[[-3.5,3.5]]},
+ {id:3,xs:[-3,-2,-1,0,1,2,3],f:x=>x**3-4*x,xr:[-4,4],yr:[-16,16],ys:4,segs:[[-3.5,3.5]]},
+ {id:4,xs:[-6,-3,-2,-1,1,2,3,6],f:x=>6/x,xr:[-7,7],yr:[-7,7],ys:1,segs:[[-7,-0.5],[0.5,7]]}];
+cfg.forEach(o=>{const c=$('#c'+o.id);o.P=o.xs.map(x=>[x,o.f(x)]);grid(c,o);
+ $('#t'+o.id).innerHTML='<div class="scroll"><table><tr><th>x</th>'+o.xs.map(x=>'<td>'+x+'</td>').join('')+'</tr><tr><th>y</th>'+
+ o.P.map(p=>'<td><input inputmode="numeric" aria-label="y when x = '+p[0]+'" data-a="'+p[1]+'" data-label="Table '+o.id+': y when x='+p[0]+'"></td>').join('')+'</tr></table></div>'+
+ '<button class="chkT">Check My y-values</button><button class="alt shw">Show Answers</button><button class="plt">Plot Points</button><button class="alt jn">Join the Points</button><span class="fb"></span>';
+ const box=$('#t'+o.id);
+ box.querySelector('.chkT').onclick=()=>{let ok=0;box.querySelectorAll('input').forEach(i=>{const r=i.value.trim()!==''&&Number(i.value)==i.dataset.a;i.className=r?'ok':'bad';ok+=r});
+  box.querySelector('.fb').textContent=ok+' of '+o.P.length+' correct'+(ok<o.P.length?'. Red boxes: recheck your substitution.':'. Well done!')};
+ box.querySelector('.shw').onclick=()=>box.querySelectorAll('input').forEach(i=>{i.value=i.dataset.a;i.className='ok'});
+ box.querySelector('.plt').onclick=()=>{o.joined=false;dots(c,o,o.P,o.P.length)};
+ box.querySelector('.jn').onclick=()=>{o.joined=true;dots(c,o,o.P,o.P.length)};
+});
+
+/* Practice checks */
+document.querySelectorAll('.chk').forEach(b=>b.onclick=()=>{const s=b.closest('section');let ok=0,n=0;
+ s.querySelectorAll('.pa').forEach(i=>{n++;const r=i.value.trim()!==''&&Number(i.value)==i.dataset.a;i.className='pa '+(r?'ok':'bad');ok+=r});
+ b.nextElementSibling.textContent=' '+ok+' of '+n+' correct'+(ok==n?'. Excellent work!':'. Try the red ones again, and substitute step by step.')});
+
+/* Submit + PDF */
+$('#send').onclick=()=>{const nm=$('#nm').value.trim(),cl=$('#cl').value.trim();
+ if(!nm||!cl){alert('Please enter your Student Name and Class first.');return}
+ let t='Student: '+nm+'\nClass: '+cl+'\n\n';
+ document.querySelectorAll('[data-label]').forEach(e=>{if(e.value.trim())t+=e.dataset.label+': '+e.value.trim()+'\n'});
+ t+='\nStudent notes: '+$('#nt').value.trim();
+ location.href='mailto:fitriar@semesta.sch.id?subject='+encodeURIComponent('Curves work - '+nm+' ('+cl+')')+'&body='+encodeURIComponent(t)};
+$('#pdf').onclick=()=>window.print();
+</script></body></html>
